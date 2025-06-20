@@ -11,6 +11,5 @@ public class JwtTool {
     @Value("${jwt.secret}")
     private String chiaveSegreta;
 
-    @Autowired
 
 }
