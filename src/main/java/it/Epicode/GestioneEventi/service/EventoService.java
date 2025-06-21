@@ -39,20 +39,7 @@ public class EventoService {
                 orElseThrow(()->new NonTrovatoException("Evento con id " + id + "non trovato"));
    }
 
-   public Evento updateEvento(int id, EventoDto eventoDto) throws NonTrovatoException {
-        Evento evento = getEvento(id);
-       evento.setTitolo(eventoDto.getTitolo());
-       evento.setDescrizione(eventoDto.getDescrizione());
-       evento.setData(eventoDto.getData());
-       evento.setLuogo(eventoDto.getLuogo());
-       evento.setPostiDisponibili(eventoDto.getPostiDisponibili());
-       return eventoRepository.save(evento);
-   }
 
-   public void deleteEvento(int id) throws NonTrovatoException {
-        Evento evento = getEvento(id);
-        eventoRepository.delete(evento);
-   }
 
 
    public void partecipaEvento(int idEvento, int idUtente) throws NonTrovatoException {
@@ -79,5 +66,29 @@ public class EventoService {
                .orElseThrow(() -> new NonTrovatoException("Organizzatore non trovato"));
        return eventoRepository.findByOrganizzatore(organizzatore);
    }
+
+   public Evento updateEventoByOrganizzatore(int idEvento, EventoDto dto, Utente organizzatore) throws NonTrovatoException {
+       Evento evento = getEvento(idEvento);
+       if (evento.getOrganizzatore().getId() !=(organizzatore.getId())) {
+           throw new RuntimeException("Non puoi modificare un evento che non hai creato.");
+       }
+       evento.setTitolo(dto.getTitolo());
+       evento.setDescrizione(dto.getDescrizione());
+       evento.setData(dto.getData());
+       evento.setLuogo(dto.getLuogo());
+       evento.setPostiDisponibili(dto.getPostiDisponibili());
+       return eventoRepository.save(evento);
+   }
+
+   public void deleteEventoByOrganizzatore(int idEvento, Utente organizzatore) throws NonTrovatoException {
+       Evento evento = getEvento(idEvento);
+       if (evento.getOrganizzatore().getId() !=(organizzatore.getId())) {
+           throw new RuntimeException("Non puoi eliminare un evento che non hai creato.");
+       }
+       eventoRepository.delete(evento);
+   }
+    public List<Evento> getEventiDisponibili() {
+        return eventoRepository.findByPostiDisponibiliGreaterThan(0);
+    }
 
 }
