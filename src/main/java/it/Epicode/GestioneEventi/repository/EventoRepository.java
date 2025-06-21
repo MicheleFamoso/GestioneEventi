@@ -9,4 +9,7 @@ import java.util.List;
 public interface EventoRepository extends JpaRepository<Evento,Integer> {
 
     List<Evento> findByOrganizzatore(Utente organizzatore);
+
+
+    List<Evento> findByPostiDisponibiliGreaterThan(int numero);
 }

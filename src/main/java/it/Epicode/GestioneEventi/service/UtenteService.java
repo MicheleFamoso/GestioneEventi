@@ -71,4 +71,9 @@ public class UtenteService {
 
     }
 
+    public Utente getByUsername(String username) throws NonTrovatoException {
+        return utenteRepository.findByUsername(username)
+                .orElseThrow(() -> new NonTrovatoException("Utente con username '" + username + "' non trovato"));
+    }
+
 }
